@@ -1,6 +1,9 @@
 <template>
-  <div class="grid-gifs">
-    <gif-card v-for="gif in gifs" :key="gif.id" :gif="gif" />
+  <div :id="category">
+    <h3>{{ loading ? "Loading..." : category }}</h3>
+    <div class="grid-gifs">
+      <gif-card v-for="gif in gifs" :key="gif.id" :gif="gif" />
+    </div>
   </div>
 </template>
 
@@ -13,26 +16,25 @@ export default {
   components: {
     GifCard,
   },
-  props: ["category", "loading"],
+  props: ["category"],
   data() {
     return {
       gifs: [],
+      loading: true,
     };
   },
-  watch: {
-    category: function (newVal) {
-      this.$emit("loading", true);
-      getGifs(newVal).then((data) => {
-        data.forEach(({ id, title, url }) => {
-          this.$emit("loading", false);
-          this.gifs.push({
-            id,
-            title,
-            url,
-          });
+  mounted() {
+    this.loading = true;
+    getGifs(this.category).then((data) => {
+      data.forEach(({ id, title, url }) => {
+        this.loading = false;
+        this.gifs.push({
+          id,
+          title,
+          url,
         });
       });
-    },
+    });
   },
 };
 </script>

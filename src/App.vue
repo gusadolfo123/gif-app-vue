@@ -1,41 +1,87 @@
 <template>
   <div id="app">
-    <h1>Gif App</h1>
+    <h1 :class="color">Gif App</h1>
+    <button @click="changeColorAndOrder">Reverse Order</button>
+    <hr />
+    <div class="history-search" id="history-search">
+      <gif-history v-for="category in categories" :category="category" />
+    </div>
+    <hr />
     <GifSearch @submit="handleSubmit" />
     <hr />
-    {{ loading ? "Loading..." : category }}
-    <GifGrid :category="category" @loading="changeLoading" />
+    <GifGrid
+      v-for="category in categories"
+      :key="category"
+      :category="category"
+    />
   </div>
 </template>
 
 <script>
 import GifGrid from "./components/GifGrid.vue";
 import GifSearch from "./components/GifSearch.vue";
+import GifHistory from "./components/GifHistory.vue";
 
 export default {
   name: "App",
   components: {
     GifGrid,
     GifSearch,
+    GifHistory,
   },
   data() {
     return {
-      category: "",
-      loading: false,
+      categories: [],
+      color: "text-red",
     };
   },
   methods: {
     handleSubmit(newTitle) {
-      this.category = newTitle;
+      if (!(this.categories.indexOf(newTitle) !== -1)) {
+        this.categories.unshift(newTitle);
+      }
     },
-    changeLoading(val) {
-      this.loading = val;
+    changeColorAndOrder() {
+      if (this.color == "text-white") this.color = "text-red";
+      else this.color = "text-white";
+      this.categories.reverse();
     },
   },
+  // mounted() {
+  //   document
+  //     .getElementById("history-search")
+  //     .addEventListener("click", function (e) {
+  //       if (e.target.tagName === "A") {
+  //         document.querySelector(e.target.getAttribute("href")).scrollIntoView({
+  //           behavior: "smooth",
+  //         });
+  //       }
+  //     });
+  // },
+  // destroyed() {
+  //   document.removeEventListener("click");
+  // },
 };
 </script>
 
 <style>
+.history-search {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+}
+
+button {
+  border-radius: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -140,6 +186,14 @@ input {
 
 a {
   text-decoration: none;
+  color: whitesmoke;
+}
+
+.text-red {
+  color: rgb(128, 190, 128);
+}
+
+.text-white {
   color: whitesmoke;
 }
 

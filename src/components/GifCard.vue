@@ -11,14 +11,6 @@
 export default {
   name: "gif-card",
   props: ["gif"],
-  data() {
-    return {};
-  },
-  // created() {
-  //   getGifs(this.category).then((cat) => {
-  //     console.log(cat);
-  //   });
-  // },
 };
 </script>
 
